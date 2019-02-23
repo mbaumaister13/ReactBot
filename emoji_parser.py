@@ -32,6 +32,10 @@ class EmojiParser:
                 return 'ohkay'
             elif query == 'f':
                 return 'letter_f'
+            elif query in ['ty', 'thanks', 'thx', 'thank']:
+                return 'np'
+            elif query in ['peach', 'ass']:
+                return 'peach'
 
     # temporary function
     def get_fields(self, output_list):

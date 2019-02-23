@@ -32,8 +32,10 @@ def determine_message_type(slack_rtm_output):
             if output and 'text' in output and AT_BOT in output['text']:
                 return 'command'
             # slack output should be parsed by NLP engine
-            if output and 'text' in output:
+            if output and 'text' in output and 'files' not in output:
                 return 'nlp'
+            if output and 'files' in output:
+                return 'invalid'
 
     return None, None, None, None
 
@@ -51,7 +53,7 @@ if __name__ == "__main__":
             channel='#general', 
             text='ReactBot activated.', 
             as_user=False, username='ReactBot', 
-            icon_url='https://emoji.slack-edge.com/TFGAN084X/gerard/4d1971251deeaf56.png')
+            icon_url='https://emoji.slack-edge.com/TFGAN084X/bard/075ff3c36a8ba16a.png')
 
             while True:
                 output_list = slack_client.rtm_read()
@@ -64,18 +66,21 @@ if __name__ == "__main__":
                     emoji_list, channel, timestamp, user, username = text_parser.parse_message(output_list)
                     print(username, emoji_list)
                     for emoji_text in emoji_list:
-                        if emoji_text not in [None, 'a', 'b', 'o', 'i', 'u']:
+                        if emoji_text not in [None, 'a', 'b', 'o', 'i', 'u', 'thx']:
                             slack_client.api_call("reactions.add", 
                             channel=channel, 
                             name=emoji_text, 
                             timestamp=timestamp, 
                             as_user=False)
+                elif msg_type == 'invalid':
+                    output_list = None
+                    print('Image sent')
                 time.sleep(READ_WEBSOCKET_DELAY)
         except:
             slack_client.api_call("chat.postMessage",
             channel='#general', 
             text='ReactBot deactivated.', 
             as_user=False, username='ReactBot', 
-            icon_url='https://emoji.slack-edge.com/TFGAN084X/gerard/4d1971251deeaf56.png')
+            icon_url='https://emoji.slack-edge.com/TFGAN084X/bard/075ff3c36a8ba16a.png')
     else:
         print("Connection failed. Invalid Slack token or bot ID?")
