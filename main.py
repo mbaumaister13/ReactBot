@@ -52,8 +52,8 @@ if __name__ == "__main__":
             slack_client.api_call("chat.postMessage",
             channel='#general', 
             text='ReactBot activated.', 
-            as_user=False, username='ReactBot', 
-            icon_url='https://emoji.slack-edge.com/TFGAN084X/bard/075ff3c36a8ba16a.png')
+            as_user=False, username='MattyBReacts', 
+            icon_url='https://afinde-production.s3.amazonaws.com/uploads/e7133c0d-e92e-46ae-9399-52e9693fa349.jpg')
 
             while True:
                 output_list = slack_client.rtm_read()
@@ -66,7 +66,7 @@ if __name__ == "__main__":
                     emoji_list, channel, timestamp, user, username = text_parser.parse_message(output_list)
                     print(username, emoji_list)
                     for emoji_text in emoji_list:
-                        if emoji_text not in [None, 'a', 'b', 'o', 'i', 'u', 'thx']:
+                        if emoji_text not in [None, 'a', 'b', 'o', 'i', 'u', 'thx', 'm', 'v', 'x']:
                             slack_client.api_call("reactions.add", 
                             channel=channel, 
                             name=emoji_text, 
@@ -74,13 +74,13 @@ if __name__ == "__main__":
                             as_user=False)
                 elif msg_type == 'invalid':
                     output_list = None
-                    print('Image sent')
+                    print('File sent')
                 time.sleep(READ_WEBSOCKET_DELAY)
         except:
             slack_client.api_call("chat.postMessage",
             channel='#general', 
             text='ReactBot deactivated.', 
-            as_user=False, username='ReactBot', 
-            icon_url='https://emoji.slack-edge.com/TFGAN084X/bard/075ff3c36a8ba16a.png')
+            as_user=False, username='MattyBReacts', 
+            icon_url='https://afinde-production.s3.amazonaws.com/uploads/e7133c0d-e92e-46ae-9399-52e9693fa349.jpg')
     else:
         print("Connection failed. Invalid Slack token or bot ID?")
