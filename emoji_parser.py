@@ -27,7 +27,7 @@ class EmojiParser:
     def format_text(self, message):
         formatted_message = message.lower()
         for char in string.punctuation:
-            if char != '_':
+            if char != '_' or char != ':':
                 formatted_message = formatted_message.replace(char, ' ')
         print(formatted_message)
         return formatted_message
@@ -35,6 +35,8 @@ class EmojiParser:
     def find_query(self, query):
         emoji = self.data["emoji"]
         for sub_list in emoji:
+            if query.startswith(':') and query.endswith(':'):
+                return query[1:-1]
             if query == sub_list[0]:
                 return query
             elif query == 'ok':
