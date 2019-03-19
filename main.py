@@ -64,7 +64,7 @@ if __name__ == "__main__":
                 elif msg_type == 'nlp':
                     #print ("in nlp branch")
                     emoji_list, channel, timestamp, user, username = text_parser.parse_message(output_list)
-                    print(username, emoji_list)
+                    print(username, [i for i in emoji_list if i != None])
                     for emoji_text in emoji_list:
                         if emoji_text not in [None, 'a', 'b', 'o', 'i', 'u', 'thx', 'm', 'v', 'x']:
                             slack_client.api_call("reactions.add", 

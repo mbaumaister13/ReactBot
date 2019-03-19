@@ -1,5 +1,6 @@
 import json
 import string
+import difflib
 
 
 class EmojiParser:
@@ -14,43 +15,36 @@ class EmojiParser:
 
     def search_list(self, query_list):
         result_set = list()
-        if set(['ur', 'mom']).issubset(query_list):
-            result_set.append('urmom')
-        elif set(['fuck', 'u']).issubset(query_list) or set(['fuck', 'you']).issubset(query_list):
-            result_set.append('nou')    
         for query in query_list:
-            if query in self.custom_emoji_list:
-                result_set.append(query)
             result_set.append(self.find_query(query))
         return result_set
 
     def format_text(self, message):
         formatted_message = message.lower()
         for char in string.punctuation:
-            if char != '_' or char != ':':
+            if char not in ['_', ':', '(', ')', '&', ';']:
                 formatted_message = formatted_message.replace(char, ' ')
         print(formatted_message)
         return formatted_message
 
     def find_query(self, query):
-        emoji = self.data["emoji"]
+        emoji = self.custom_emoji_list
         for sub_list in emoji:
             if query.startswith(':') and query.endswith(':'):
                 return query[1:-1]
-            if query == sub_list[0]:
-                return query
+            if query in sub_list:
+                for emote in difflib.get_close_matches(query, emoji, 3, .85):
+                    return emote
             elif query == 'ok':
                 return 'ohkay'
             elif query == 'f':
                 return 'letter_f'
             elif query in ['ty', 'thanks', 'thx', 'thank']:
                 return 'np'
-            elif query in ['peach', 'ass']:
+            elif query in ['peach', 'ass', 'booty', 'butt']:
                 return 'peach'
-            elif query in ['&gt;:(', 'angry', 'd:&lt;', '):&lt;']:
+            elif query  in ['angry', '&gt;:(', 'd:&lt;', '):&lt;']:
                 return 'angryface'
-            elif query in [':(', '):']:
-                return 'sadness'
             elif query in ['hankey', 'poop', 'turd', 'shit', 'crap', 'feces', 'dookie', 'poopy', 'poopie', 'shid', 'shidded']:
                 return 'poop'
             elif query in ['hehe', 'heehee']:
@@ -63,7 +57,7 @@ class EmojiParser:
         for output in output_list:
             #print(output)
             if 'subtype' in output and 'attachments' not in output:
-                if output['subtype'] == 'slackbot_response':
+                if output['subtype'] in ['slackbot_response', 'channel_topic']:
                     return output['text'], output['channel'], output['ts'], output['user'], 'Slackbot'
                 else:    
                     return output['text'], output['channel'], output['ts'], output['bot_id'], 'Some Bot'
