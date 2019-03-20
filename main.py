@@ -1,5 +1,6 @@
 #!env/bin/python
 import time
+import random
 from slackclient import SlackClient
 from emoji_parser import EmojiParser
 from command_handler import CommandHandler
@@ -66,7 +67,7 @@ if __name__ == "__main__":
                     emoji_list, channel, timestamp, user, username = text_parser.parse_message(output_list)
                     print(username, [i for i in emoji_list if i != None])
                     for emoji_text in emoji_list:
-                        if emoji_text not in [None, 'a', 'b', 'o', 'i', 'u', 'thx', 'm', 'v', 'x']:
+                        if emoji_text not in [None, 'a', 'b', 'o', 'i', 'u', 'thx', 'm', 'v', 'x'] and (random.uniform(0,1) > .75):
                             slack_client.api_call("reactions.add", 
                             channel=channel, 
                             name=emoji_text, 
