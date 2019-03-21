@@ -29,10 +29,11 @@ class EmojiParser:
         return formatted_message
 
     def find_query(self, query):
+        emoji_set = set(self.custom_emoji_list.keys())
         if query.startswith(':') and query.endswith(':'):
             return query[1:-1]
         elif random.random() < 0.5:
-            if query in self.custom_emoji_list:
+            if query in emoji_set:
                 for emote in difflib.get_close_matches(query, self.custom_emoji_list, 3, .85):
                        return emote
             elif query == 'ok':
