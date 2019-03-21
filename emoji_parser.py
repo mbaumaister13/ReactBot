@@ -1,10 +1,11 @@
 import json
 import string
 import difflib
-
+import random
+from datetime import datetime
+random.seed(datetime.now())
 
 class EmojiParser:
-
     def __init__(self, slack_client):
         # grabs the custom emoji list for server
         self.custom_emoji_list = slack_client.api_call("emoji.list")["emoji"]
@@ -28,21 +29,20 @@ class EmojiParser:
         return formatted_message
 
     def find_query(self, query):
-        emoji = self.custom_emoji_list
-        for sub_list in emoji:
-            if query.startswith(':') and query.endswith(':'):
-                return query[1:-1]
-            if query in sub_list:
-                for emote in difflib.get_close_matches(query, emoji, 3, .85):
-                    return emote
+        if query.startswith(':') and query.endswith(':'):
+            return query[1:-1]
+        elif random.random() < 0.5:
+            if query in self.custom_emoji_list:
+                for emote in difflib.get_close_matches(query, self.custom_emoji_list, 3, .85):
+                       return emote
             elif query == 'ok':
                 return 'ohkay'
-            elif query == 'f':
-                return 'letter_f'
             elif query in ['ty', 'thanks', 'thx', 'thank']:
                 return 'np'
             elif query in ['peach', 'ass', 'booty', 'butt']:
                 return 'peach'
+            elif query in ['cock', 'dick', 'penis', 'dong']:
+                return 'eggplant'
             elif query  in ['angry', '&gt;:(', 'd:&lt;', '):&lt;']:
                 return 'angryface'
             elif query in ['hankey', 'poop', 'turd', 'shit', 'crap', 'feces', 'dookie', 'poopy', 'poopie', 'shid', 'shidded']:
