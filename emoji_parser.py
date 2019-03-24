@@ -10,14 +10,11 @@ class EmojiParser:
         # grabs the custom emoji list for server
         self.custom_emoji_list = slack_client.api_call("emoji.list")["emoji"]
         self.users_list = slack_client.api_call("users.list")["members"]
-        # load emojis file
-        with open('emoji.json') as data_file:
-            self.data = json.load(data_file)
 
     def search_list(self, query_list):
-        result_set = list()
+        result_set = set()
         for query in query_list:
-            result_set.append(self.find_query(query))
+            result_set.add(self.find_query(query))
         return result_set
 
     def format_text(self, message):
@@ -53,10 +50,9 @@ class EmojiParser:
             elif query == 'corn':
                 return 'corn1'
 
-    # temporary function
+    # Ignore the shitty hardcoding
     def get_fields(self, output_list):
         for output in output_list:
-            #print(output)
             if 'subtype' in output and 'attachments' not in output:
                 if output['subtype'] in ['slackbot_response', 'channel_topic']:
                     return output['text'], output['channel'], output['ts'], output['user'], 'Slackbot'
@@ -73,11 +69,10 @@ class EmojiParser:
                     if output['user'] == users['id']:
                         name = users['name']
                 return output['text'], output['channel'], output['ts'], output['user'], name
-    BOT_ID = 'UGDKW5T8F'
 
     def parse_message(self, slack_message):
         text, channel, timestamp, user, username = self.get_fields(slack_message)
         text = self.format_text(text)
-        if text and channel and timestamp and user != self.BOT_ID:
+        if text and channel and timestamp and user:
             emoji_list = self.search_list(text.split())
             return emoji_list, channel, timestamp, user, username
