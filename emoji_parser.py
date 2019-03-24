@@ -7,17 +7,17 @@ random.seed(datetime.now())
 
 class EmojiParser:
     def __init__(self, slack_client):
-        # grabs the custom emoji list for server
+        #Grabs the custom emoji list and user list for server
         self.custom_emoji_list = slack_client.api_call("emoji.list")["emoji"]
         self.users_list = slack_client.api_call("users.list")["members"]
 
-    def search_list(self, query_list):
+    def search_list(self, query_list): #Adds found emoji matches to the result set
         result_set = set()
         for query in query_list:
             result_set.add(self.find_query(query))
         return result_set
 
-    def format_text(self, message):
+    def format_text(self, message): #Lowercases the message and removes certain punctuation
         formatted_message = message.lower()
         for char in string.punctuation:
             if char not in ['_', ':', '(', ')', '&', ';']:
@@ -25,7 +25,7 @@ class EmojiParser:
         print(formatted_message)
         return formatted_message
 
-    def find_query(self, query):
+    def find_query(self, query): #Checks each word in the message for a matching emoji
         emoji_set = set(self.custom_emoji_list.keys())
         if query.startswith(':') and query.endswith(':'):
             return query[1:-1]
@@ -51,7 +51,7 @@ class EmojiParser:
                 return 'corn1'
 
     # Ignore the shitty hardcoding
-    def get_fields(self, output_list):
+    def get_fields(self, output_list): #Gets fields for reaction adding
         for output in output_list:
             if 'subtype' in output and 'attachments' not in output:
                 if output['subtype'] in ['slackbot_response', 'channel_topic']:
@@ -70,7 +70,7 @@ class EmojiParser:
                         name = users['name']
                 return output['text'], output['channel'], output['ts'], output['user'], name
 
-    def parse_message(self, slack_message):
+    def parse_message(self, slack_message): #Parses each message sent
         text, channel, timestamp, user, username = self.get_fields(slack_message)
         text = self.format_text(text)
         if text and channel and timestamp and user:
