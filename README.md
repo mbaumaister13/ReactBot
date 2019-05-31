@@ -2,9 +2,8 @@
 Slack bot which adds reactions to messages 
 
 #Get Started
-- Put your slack API key in a permissions.txt
+- Put your slack API key in a slacktoken.txt
 ```
-python get_bot_id.py
 python main.py
 ```
 #Future

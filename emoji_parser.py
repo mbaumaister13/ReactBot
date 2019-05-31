@@ -29,7 +29,7 @@ class EmojiParser:
         emoji_set = set(self.custom_emoji_list.keys())
         if query.startswith(':') and query.endswith(':'):
             return query[1:-1]
-        elif random.random() < 0.5:
+        elif random.random() < 0.25:
             if query in emoji_set:
                 for emote in difflib.get_close_matches(query, self.custom_emoji_list, 3, .85):
                        return emote
@@ -53,26 +53,36 @@ class EmojiParser:
     # Ignore the shitty hardcoding
     def get_fields(self, output_list): #Gets fields for reaction adding
         for output in output_list:
-            if 'subtype' in output and 'attachments' not in output:
-                if output['subtype'] in ['slackbot_response', 'channel_topic']:
-                    return output['text'], output['channel'], output['ts'], output['user'], 'Slackbot'
-                else:    
-                    return output['text'], output['channel'], output['ts'], output['bot_id'], 'Some Bot'
-            elif 'attachments' in output:
-                if output['username'] == 'Polly':
-                    return 'Polly', output['channel'], output['ts'], output['bot_id'], 'Polly'
-                else:
-                    print(output['attachments']['text'], output['channel'], output['ts'], output['user'], 'Quoted Message')
-                    return 'Quoted Message', output['channel'], output['ts'], output['user'], 'Quoted Message'
-            else:
+            try:
                 for users in self.users_list: 
                     if output['user'] == users['id']:
                         name = users['name']
                 return output['text'], output['channel'], output['ts'], output['user'], name
+            except:
+                print("Failed to parse")
+                return None, None, None, None, None
+            # if 'subtype' in output and 'attachments' not in output:
+            #     if output['subtype'] in ['slackbot_response', 'channel_topic', 'me_message']:
+            #         return output['text'], output['channel'], output['ts'], output['user'], 'Event'
+            #     else:    
+            #         return output['text'], output['channel'], output['ts'], output['bot_id'], 'Some Bot'
+            # elif 'attachments' in output:
+            #     if output['username'] == 'Polly':
+            #         return 'Polly', output['channel'], output['ts'], output['bot_id'], 'Polly'
+            #     else:
+            #         print(output['attachments']['text'], output['channel'], output['ts'], output['user'], 'Quoted Message')
+            #         return 'Quoted Message', output['channel'], output['ts'], output['user'], 'Quoted Message'
+            # else:
+            #     for users in self.users_list: 
+            #         if output['user'] == users['id']:
+            #             name = users['name']
+            #     return output['text'], output['channel'], output['ts'], output['user'], name
 
     def parse_message(self, slack_message): #Parses each message sent
         text, channel, timestamp, user, username = self.get_fields(slack_message)
-        text = self.format_text(text)
         if text and channel and timestamp and user:
+            text = self.format_text(text)
             emoji_list = self.search_list(text.split())
             return emoji_list, channel, timestamp, user, username
+        else:
+            return None, None, None, None, None
