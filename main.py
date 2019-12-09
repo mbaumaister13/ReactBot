@@ -1,8 +1,9 @@
 #!env/bin/python
-import time
+from datetime import datetime
 import random
 from slackclient import SlackClient
 from emoji_parser import EmojiParser
+random.seed(datetime.now())
 
 #Read in the authentication token
 f = open('slacktoken.txt')
@@ -44,6 +45,14 @@ if __name__ == "__main__": #Does all the work
                 if msg_type == 'text': #Adds emoji to a message based on the parsed output
                     emoji_list, channel, timestamp, user, username = text_parser.parse_message(output_list)
 
+                    if username == "kaitlynohern" and random.random() <= 0.1:
+                        #print("Rip Katie", channel, timestamp)
+                        slack_client.api_call("chat.delete",
+                        channel=channel,
+                        ts=timestamp,
+                        as_user=True
+                        )
+
                     if emoji_list == None:
                         print("Failed to grab emoji list.")
                         continue
@@ -51,7 +60,7 @@ if __name__ == "__main__": #Does all the work
                     print(username, [i for i in emoji_list if i != None])
 
                     for emoji_text in emoji_list:
-                        if emoji_text not in [None, 'a', 'b', 'o', 'i', 'u', 'thx', 'm', 'v', 'x']:
+                        if emoji_text not in [None, 'a', 'b', 'o', 'i', 'u', 'thx', 'm', 'v', 'x', 't']:
                             slack_client.api_call("reactions.add", 
                             channel=channel, 
                             name=emoji_text, 

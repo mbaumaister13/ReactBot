@@ -29,11 +29,11 @@ class EmojiParser:
         emoji_set = set(self.custom_emoji_list.keys())
         if query.startswith(':') and query.endswith(':'):
             return query[1:-1]
-        elif random.random() < 1.01:
+        elif random.random() <= 0.65:
             if query in emoji_set:
                 for emote in difflib.get_close_matches(query, self.custom_emoji_list, 3, .85):
                        return emote
-            elif query == 'ok':
+            elif query == 'ok': #Emoji Dictionary here
                 return 'ohkay'
             elif query in ['ty', 'thanks', 'thx', 'thank']:
                 return 'np'
