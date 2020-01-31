@@ -45,7 +45,8 @@ if __name__ == "__main__": #Does all the work
                 if msg_type == 'text': #Adds emoji to a message based on the parsed output
                     emoji_list, channel, timestamp, user, username = text_parser.parse_message(output_list)
 
-                    if username == "kaitlynohern" and random.random() <= 0.1:
+                    #Delete people's messages lol
+                    if username in ["kaitlynohern", "mpetela"] and random.random() <= 0.5:
                         #print("Rip Katie", channel, timestamp)
                         slack_client.api_call("chat.delete",
                         channel=channel,

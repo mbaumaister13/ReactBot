@@ -49,6 +49,8 @@ class EmojiParser:
                 return 'xd'
             elif query == 'corn':
                 return 'corn1'
+            elif query == 'ya':
+                return 'yeet'
 
     # Ignore the shitty hardcoding
     def get_fields(self, output_list): #Gets fields for reaction adding
