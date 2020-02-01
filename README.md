@@ -1,5 +1,5 @@
-# ReactBot
-Slack bot which adds reactions to messages 
+# AutoReact
+- Automated slack tool which adds user reactions to messages 
 
 #Get Started
 - Put your slack user legacy token in slacktoken.txt
