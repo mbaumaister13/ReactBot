@@ -1,6 +1,7 @@
 #Custom
 python-slackclient/
 *.md
+*.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
