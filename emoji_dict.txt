@@ -1,0 +1,8 @@
+{
+	"slightly_smiling_face" : {
+			"list" : ["happy", "smile"]
+	},
+	"slightly_frowning_face" : {
+			"list" : ["sad", "frown"]
+	}
+}
