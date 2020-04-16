@@ -32,12 +32,6 @@ if __name__ == "__main__": #Does all the work
         try:
             print("ReactBot connected and running!")
 
-            # slack_client.api_call("chat.postMessage",
-            # channel='#general', 
-            # text='ReactBot activated.', 
-            # as_user=False, username='MattyBReacts', 
-            # icon_url='https://afinde-production.s3.amazonaws.com/uploads/e7133c0d-e92e-46ae-9399-52e9693fa349.jpg')
-
             while True:
                 output_list = slack_client.rtm_read()
                 msg_type = determine_event_type(output_list)
@@ -52,7 +46,7 @@ if __name__ == "__main__": #Does all the work
                     print(username, [i for i in emoji_list if i != None])
 
                     for emoji_text in emoji_list:
-                        if emoji_text not in [None, 'a', 'b', 'o', 'i', 'u', 'thx', 'm', 'v', 'x', 't']:
+                        if emoji_text not in [None, 'a', 'b', 'o', 'i', 'u', 'm', 'v', 'x', 't']: #Ignores individual letters
                             slack_client.api_call("reactions.add", 
                             channel=channel, 
                             name=emoji_text, 
@@ -71,11 +65,6 @@ if __name__ == "__main__": #Does all the work
 
         except: #Shuts down on Ctrl+C in terminal
             print("ReactBot shut down.")
-            # slack_client.api_call("chat.postMessage",
-            # channel='#general', 
-            # text='ReactBot deactivated.', 
-            # as_user=False, username='MattyBReacts', 
-            # icon_url='https://afinde-production.s3.amazonaws.com/uploads/e7133c0d-e92e-46ae-9399-52e9693fa349.jpg')
 
     else:
         print("Connection failed. Invalid Slack token?")
