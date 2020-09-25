@@ -1,4 +1,5 @@
 #!env/bin/python
+import time
 from datetime import datetime
 import random
 from slackclient import SlackClient
@@ -33,6 +34,7 @@ if __name__ == "__main__": #Does all the work
             print("ReactBot connected and running!")
 
             while True:
+                time.sleep(.5)
                 output_list = slack_client.rtm_read()
                 msg_type = determine_event_type(output_list)
 
