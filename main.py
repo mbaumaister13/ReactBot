@@ -34,7 +34,7 @@ if __name__ == "__main__": #Does all the work
             print("ReactBot connected and running!")
 
             while True:
-                time.sleep(.5)
+                time.sleep(.1) #perhaps webhooks soon
                 output_list = slack_client.rtm_read()
                 msg_type = determine_event_type(output_list)
 
