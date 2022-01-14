@@ -34,9 +34,7 @@ class EmojiParser:
     def search_message(self, query_list): # Adds found emoji matches to the result set
         result_set = set()
         for query in query_list:
-            print(query)
             for emote in self.find_emotes(query):
-                print(emote)
                 result_set.add(emote)
         return result_set
 
