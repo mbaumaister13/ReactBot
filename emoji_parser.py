@@ -8,7 +8,7 @@ random.seed(datetime.now())
 
 class EmojiParser:
     def __init__(self, slack_client):
-        #Grabs the custom emoji list, user list and emoji dictionary for server
+        # Grabs the custom emoji list, user list and emoji dictionary for server
         self.custom_emoji_list = slack_client.api_call("emoji.list")["emoji"]
         self.users_list = slack_client.api_call("users.list")["members"]
         self.channel_list = slack_client.api_call("conversations.list")["channels"]
@@ -31,14 +31,14 @@ class EmojiParser:
     def get_random_emote(self):
         return random.choice([emote for emote in list(self.custom_emoji_list.keys()) if not any(x in emote for x in ['bighdm', 'mf', 'gopher'])])
 
-    def search_message(self, query_list): #Adds found emoji matches to the result set
+    def search_message(self, query_list): # Adds found emoji matches to the result set
         result_set = set()
         for query in query_list:
             for emote in self.find_emotes(query):
                 result_set.add(emote)
         return result_set
 
-    def format_message(self, message): #Lowercases the message and removes certain punctuation
+    def format_message(self, message): # Lowercases the message and removes certain punctuation
         formatted_message = message.lower()
         for char in string.punctuation:
             if char not in ['_', ':', '(', ')', '&', ';', '-']:
@@ -46,13 +46,13 @@ class EmojiParser:
         print(formatted_message)
         return formatted_message
 
-    def find_emotes(self, query): #Checks each word in the message for a matching emoji
+    def find_emotes(self, query): # Checks each word in the message for a matching emoji
         try:
             emotes = set()
             if query.startswith(':') and query.endswith(':'):
                 emotes.add(query[1:-1])
 
-            if random.random() <= .33:
+            if random.random() <= .33: # Adjust this value between 0-1 to change random chance of react.
                 if query.startswith('j'):
                     emotes.add('j')
                 
@@ -63,7 +63,7 @@ class EmojiParser:
                 
                 matching_emote_set = set()
                 for matching_query in matching_queries:
-                    for match in difflib.get_close_matches(matching_query, self.emoji_set, 100, .6):
+                    for match in difflib.get_close_matches(matching_query, self.emoji_set, 100, .6): # Adjust decimal value to determine partial match strength
                         matching_emote_set.add(match)
 
                 if len(matching_emote_set) > 0:
@@ -85,7 +85,7 @@ class EmojiParser:
         except Exception as e:
             print(e)
 
-    def get_message_fields(self, output_list): #Gets fields for reaction adding
+    def get_message_fields(self, output_list): # Gets fields for reaction adding
         for output in output_list:
             try:
                 return output['text'], output['channel'], output['ts'], output['user'], self.get_user(output['user']), self.get_channel(output['channel'])
@@ -94,7 +94,7 @@ class EmojiParser:
                 return None, None, None, None, None, None
 
 
-    def parse_message(self, slack_message): #Parses each message sent
+    def parse_message(self, slack_message): # Parses each message sent
         text, channel, timestamp, user, username, channel_name = self.get_message_fields(slack_message)
         if text and channel and timestamp and user:
             text = self.format_message(text)
