@@ -1,5 +1,4 @@
 import json
-from nis import cat
 import string
 import difflib
 import random
@@ -52,27 +51,21 @@ class EmojiParser:
             if query.startswith(':') and query.endswith(':'):
                 emotes.add(query[1:-1])
 
-            if random.random() <= .33: # Adjust this value between 0-1 to change random chance of react.
+            if random.random() <= .20: # Adjust this value between 0-1 to change random chance of react.
                 if query.startswith('j'):
                     emotes.add('j')
                 
-                matching_queries = difflib.get_close_matches(query, self.emoji_set, 100, .5) # Adjust decimal value to determine partial match strength
-                
-                matching_emote_set = set()
-                for match in matching_queries:
-                    matching_emote_set.add(match)
+                matching_emote_set = set(difflib.get_close_matches(query, self.emoji_set, 100)) # Adjust decimal value to determine partial match strength
 
                 if len(matching_emote_set) > 0:
                     matching_emote_list = list(matching_emote_set)
-                    random_number = random.randint(1, 3)
-                    num = 0
+                    random_number = random.randint(1, 3 if len(matching_emote_list) > 3 else len(matching_emote_list))
+                    num = 0 
                     while num < random_number:
                         emote = matching_emote_list[random.randint(0, len(matching_emote_list)-1)]
                         if emote not in emotes:
                             emotes.add(emote)
                             num += 1
-                            
-                            
 
                 for emoji in self.emoji_dict:
                     if query in self.emoji_dict[emoji]['list']:
