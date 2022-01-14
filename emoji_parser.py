@@ -34,7 +34,9 @@ class EmojiParser:
     def search_message(self, query_list): # Adds found emoji matches to the result set
         result_set = set()
         for query in query_list:
+            print(query)
             for emote in self.find_emotes(query):
+                print(emote)
                 result_set.add(emote)
         return result_set
 
@@ -56,19 +58,15 @@ class EmojiParser:
                 if query.startswith('j'):
                     emotes.add('j')
                 
-                matching_queries = []
-                for emoji in self.emoji_set:
-                    if query in emoji:
-                        matching_queries.append(query)
+                matching_queries = difflib.get_close_matches(query, self.emoji_set, 100, .5) # Adjust decimal value to determine partial match strength
                 
                 matching_emote_set = set()
-                for matching_query in matching_queries:
-                    for match in difflib.get_close_matches(matching_query, self.emoji_set, 100, .6): # Adjust decimal value to determine partial match strength
-                        matching_emote_set.add(match)
+                for match in matching_queries:
+                    matching_emote_set.add(match)
 
                 if len(matching_emote_set) > 0:
                     matching_emote_list = list(matching_emote_set)
-                    random_number = random.randint(1, 5)
+                    random_number = random.randint(1, 3)
                     num = 0
                     while num < random_number:
                         emote = matching_emote_list[random.randint(0, len(matching_emote_list)-1)]
